@@ -1,0 +1,1778 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GP Jalna | Smart Attendance</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+:root{
+    --primary:#6c63ff;
+    --secondary:#00c6ff;
+    --dark:#111827;
+    --card:#ffffff;
+    --light:#f4f7ff;
+    --success:#22c55e;
+    --danger:#ef4444;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left, #d9d6ff, transparent 35%),
+        radial-gradient(circle at bottom right, #c7f4ff, transparent 35%),
+        var(--light);
+    color:var(--dark);
+}
+
+/* ================= HEADER ================= */
+
+header{
+    width:100%;
+    padding:18px 7%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(0,0,0,.08);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-icon{
+    width:50px;
+    height:50px;
+    border-radius:15px;
+    display:grid;
+    place-items:center;
+    font-size:25px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;
+    box-shadow:0 10px 25px rgba(108,99,255,.3);
+}
+
+.logo h2{
+    font-size:21px;
+}
+
+.logo p{
+    font-size:12px;
+    color:#6b7280;
+    margin-top:3px;
+}
+
+/* ================= BUTTON ================= */
+
+button{
+    cursor:pointer;
+    border:2px solid var(--primary);
+    background:transparent;
+    color:var(--primary);
+    padding:10px 18px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:bold;
+    transition:.25s;
+}
+
+button:hover{
+    background:var(--primary);
+    color:white;
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(108,99,255,.25);
+}
+
+button:active{
+    transform:scale(.94);
+}
+
+.primary-btn{
+    background:var(--primary);
+    color:white;
+}
+
+.danger-btn{
+    border-color:var(--danger);
+    color:var(--danger);
+}
+
+.danger-btn:hover{
+    background:var(--danger);
+}
+
+/* ================= LOGIN ================= */
+
+.login-page{
+    min-height:calc(100vh - 87px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+
+.login-card{
+    width:100%;
+    max-width:450px;
+    padding:35px;
+    border-radius:25px;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(15px);
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+    border:1px solid rgba(255,255,255,.8);
+}
+
+.login-card h1{
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.login-card p{
+    text-align:center;
+    color:#6b7280;
+    margin-bottom:25px;
+}
+
+.role-box{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.role{
+    padding:18px 10px;
+    text-align:center;
+    border:2px solid #ddd;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.role:hover{
+    border-color:var(--primary);
+}
+
+.role.active{
+    background:#eeedff;
+    border-color:var(--primary);
+    color:var(--primary);
+}
+
+.input-box{
+    margin-bottom:15px;
+}
+
+.input-box label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.input-box input,
+.input-box select{
+    width:100%;
+    padding:13px;
+    border-radius:12px;
+    border:1px solid #d7d7d7;
+    outline:none;
+    font-size:15px;
+}
+
+.input-box input:focus,
+.input-box select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(108,99,255,.1);
+}
+
+.login-card button{
+    width:100%;
+    margin-top:8px;
+}
+
+/* ================= DASHBOARD ================= */
+
+.dashboard{
+    display:none;
+    padding:30px 7%;
+    max-width:1500px;
+    margin:auto;
+}
+
+.welcome{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.welcome h1{
+    font-size:28px;
+}
+
+.welcome p{
+    color:#6b7280;
+    margin-top:5px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:rgba(255,255,255,.85);
+    padding:22px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    border:1px solid white;
+}
+
+.stat-card span{
+    font-size:13px;
+    color:#6b7280;
+}
+
+.stat-card h2{
+    margin-top:8px;
+    font-size:28px;
+}
+
+/* ================= MAIN GRID ================= */
+
+.main-grid{
+    display:grid;
+    grid-template-columns:300px 1fr;
+    gap:22px;
+}
+
+.sidebar,
+.content-card{
+    background:rgba(255,255,255,.88);
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+.sidebar h3{
+    margin-bottom:18px;
+}
+
+.subject{
+    padding:13px;
+    border-radius:12px;
+    margin-bottom:10px;
+    border:1px solid #eee;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.subject:hover{
+    background:#f0efff;
+    border-color:var(--primary);
+}
+
+.subject.active-subject{
+    background:linear-gradient(135deg,var(--primary),#827cff);
+    color:white;
+}
+
+.content-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.search{
+    padding:12px 15px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    outline:none;
+    min-width:230px;
+}
+
+.search:focus{
+    border-color:var(--primary);
+}
+
+.date-input{
+    padding:11px;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+/* ================= TABLE ================= */
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th{
+    text-align:left;
+    padding:15px;
+    background:#f4f3ff;
+    color:var(--primary);
+}
+
+td{
+    padding:15px;
+    border-bottom:1px solid #eee;
+}
+
+.student-name{
+    font-weight:bold;
+}
+
+.roll{
+    color:#6b7280;
+    font-size:13px;
+}
+
+.status-btn{
+    padding:8px 12px;
+    border-radius:10px;
+    font-size:12px;
+}
+
+.present{
+    border-color:var(--success);
+    color:var(--success);
+}
+
+.present.active-status{
+    background:var(--success);
+    color:white;
+}
+
+.absent{
+    border-color:var(--danger);
+    color:var(--danger);
+}
+
+.absent.active-status{
+    background:var(--danger);
+    color:white;
+}
+
+.progress{
+    width:120px;
+    height:9px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    border-radius:20px;
+}
+
+/* ================= TEACHER PANEL ================= */
+
+.teacher-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+/* ================= STUDENT VIEW ================= */
+
+.student-info{
+    padding:20px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#f0efff,#e5f9ff);
+    margin-bottom:20px;
+}
+
+.big-percent{
+    font-size:40px;
+    font-weight:bold;
+    color:var(--primary);
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#6b7280;
+    font-size:13px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+
+    .sidebar h3{
+        grid-column:1/-1;
+    }
+
+    .subject{
+        margin:0;
+    }
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:14px 5%;
+    }
+
+    .logo h2{
+        font-size:16px;
+    }
+
+    .logo p{
+        display:none;
+    }
+
+    .dashboard{
+        padding:20px 4%;
+    }
+
+    .login-page{
+        padding:18px;
+    }
+
+    .login-card{
+        padding:25px 20px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .stat-card{
+        padding:15px;
+    }
+
+    .stat-card h2{
+        font-size:22px;
+    }
+
+    .welcome{
+        display:block;
+    }
+
+    .welcome button{
+        margin-top:15px;
+    }
+
+    .sidebar{
+        grid-template-columns:1fr;
+    }
+
+    .content-card{
+        padding:15px;
+    }
+
+    .search{
+        width:100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="logo">
+
+        <div class="logo-icon">🎓</div>
+
+        <div>
+            <h2>GP Jalna</h2>
+            <p>Smart Attendance System</p>
+        </div>
+
+    </div>
+
+    <button id="logoutBtn" onclick="logout()" style="display:none;">
+        Logout
+    </button>
+
+</header>
+
+
+<!-- ================= LOGIN ================= -->
+
+<div class="login-page" id="loginPage">
+
+    <div class="login-card">
+
+        <h1>Welcome 👋</h1>
+
+        <p>
+            GP Jalna Smart Attendance Portal
+        </p>
+
+
+        <div class="role-box">
+
+            <div class="role active"
+                 onclick="selectRole('teacher')"
+                 id="teacherRole">
+
+                👨‍🏫
+                <br>
+                <b>Teacher</b>
+
+            </div>
+
+
+            <div class="role"
+                 onclick="selectRole('student')"
+                 id="studentRole">
+
+                👨‍🎓
+                <br>
+                <b>Student</b>
+
+            </div>
+
+        </div>
+
+
+        <div id="teacherLogin">
+
+            <div class="input-box">
+
+                <label>Teacher Name</label>
+
+                <input
+                    type="text"
+                    id="teacherName"
+                    placeholder="Enter teacher name">
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="teacherPassword"
+                    placeholder="Enter password">
+
+            </div>
+
+        </div>
+
+
+        <div id="studentLogin" style="display:none;">
+
+            <div class="input-box">
+
+                <label>Student Name</label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter your name">
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Roll Number</label>
+
+                <input
+                    type="number"
+                    id="studentRoll"
+                    placeholder="Enter roll number">
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            onclick="login()">
+
+            Enter Dashboard →
+
+        </button>
+
+
+        <p style="font-size:12px;margin-top:15px;">
+
+            Demo Teacher Password: <b>gpjalna123</b>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div class="dashboard" id="dashboard">
+
+
+    <div class="welcome">
+
+        <div>
+
+            <h1 id="welcomeText">
+                Welcome
+            </h1>
+
+            <p>
+                Computer Science Engineering Diploma • 3rd Semester
+            </p>
+
+        </div>
+
+        <div id="todayDate"></div>
+
+    </div>
+
+
+
+    <!-- ================= STATS ================= -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <span>Total Students</span>
+
+            <h2 id="totalStudents">
+                10
+            </h2>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span>Present Today</span>
+
+            <h2 id="presentCount">
+                0
+            </h2>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span>Absent Today</span>
+
+            <h2 id="absentCount">
+                0
+            </h2>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span>Attendance</span>
+
+            <h2 id="attendancePercent">
+                0%
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="main-grid">
+
+
+        <!-- SUBJECT SIDEBAR -->
+
+        <div class="sidebar">
+
+            <h3>📚 Subjects</h3>
+
+            <div class="subject active-subject"
+                 onclick="changeSubject(this,'Data Structures')">
+
+                Data Structures
+
+            </div>
+
+
+            <div class="subject"
+                 onclick="changeSubject(this,'Database Management System')">
+
+                DBMS
+
+            </div>
+
+
+            <div class="subject"
+                 onclick="changeSubject(this,'Digital Techniques')">
+
+                Digital Techniques
+
+            </div>
+
+
+            <div class="subject"
+                 onclick="changeSubject(this,'Computer Networks')">
+
+                Computer Networks
+
+            </div>
+
+
+            <div class="subject"
+                 onclick="changeSubject(this,'Object Oriented Programming')">
+
+                OOP
+
+            </div>
+
+
+            <div class="subject"
+                 onclick="changeSubject(this,'Mathematics')">
+
+                Mathematics
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CONTENT -->
+
+        <div class="content-card">
+
+
+            <div class="content-top">
+
+                <div>
+
+                    <h2 id="subjectTitle">
+
+                        Data Structures
+
+                    </h2>
+
+                    <p id="roleMessage"
+                       style="color:#6b7280;margin-top:5px;">
+
+                        Mark today's attendance
+
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <input
+                        type="date"
+                        class="date-input"
+                        id="attendanceDate">
+
+                    <input
+                        type="text"
+                        class="search"
+                        placeholder="🔍 Search student..."
+                        onkeyup="searchStudent(this.value)">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TEACHER ACTIONS -->
+
+            <div
+                class="teacher-actions"
+                id="teacherActions">
+
+                <button
+                    onclick="markAllPresent()"
+                    class="primary-btn">
+
+                    ✓ Mark All Present
+
+                </button>
+
+
+                <button
+                    onclick="markAllAbsent()"
+                    class="danger-btn">
+
+                    ✕ Mark All Absent
+
+                </button>
+
+
+                <button
+                    onclick="saveAttendance()">
+
+                    💾 Save Attendance
+
+                </button>
+
+            </div>
+
+
+
+            <!-- STUDENT INFO -->
+
+            <div
+                id="studentInfo"
+                style="display:none;">
+
+            </div>
+
+
+
+            <!-- TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Roll No.</th>
+
+                            <th>Student Name</th>
+
+                            <th>Status</th>
+
+                            <th>Attendance %</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    © 2026 Government Polytechnic Jalna • Smart Attendance System
+
+</footer>
+
+
+
+<script>
+
+/* ================= DATA ================= */
+
+const students = [
+
+    {roll:1,name:"Aarav Patil"},
+    {roll:2,name:"Rohan Shinde"},
+    {roll:3,name:"Harshal Shinde"},
+    {roll:4,name:"Aditya Pawar"},
+    {roll:5,name:"Sahil Jadhav"},
+    {roll:6,name:"Om Deshmukh"},
+    {roll:7,name:"Pratik More"},
+    {roll:8,name:"Akash Chavan"},
+    {roll:9,name:"Rahul Patil"},
+    {roll:10,name:"Siddhesh Kale"}
+
+];
+
+
+let currentRole = "teacher";
+
+let currentSubject = "Data Structures";
+
+
+let attendance = JSON.parse(
+    localStorage.getItem("gpAttendance")
+) || {};
+
+
+/* ================= DATE ================= */
+
+const today = new Date();
+
+document.getElementById("attendanceDate").value =
+today.toISOString().split("T")[0];
+
+
+document.getElementById("todayDate").innerHTML =
+"📅 " +
+today.toLocaleDateString(
+    "en-IN",
+    {
+        weekday:"long",
+        year:"numeric",
+        month:"long",
+        day:"numeric"
+    }
+);
+
+
+
+/* ================= ROLE ================= */
+
+function selectRole(role){
+
+    currentRole = role;
+
+
+    document
+    .getElementById("teacherRole")
+    .classList
+    .remove("active");
+
+
+    document
+    .getElementById("studentRole")
+    .classList
+    .remove("active");
+
+
+    if(role === "teacher"){
+
+        document
+        .getElementById("teacherRole")
+        .classList
+        .add("active");
+
+
+        document
+        .getElementById("teacherLogin")
+        .style.display = "block";
+
+
+        document
+        .getElementById("studentLogin")
+        .style.display = "none";
+
+    }
+
+
+    else{
+
+        document
+        .getElementById("studentRole")
+        .classList
+        .add("active");
+
+
+        document
+        .getElementById("teacherLogin")
+        .style.display = "none";
+
+
+        document
+        .getElementById("studentLogin")
+        .style.display = "block";
+
+    }
+
+}
+
+
+
+/* ================= LOGIN ================= */
+
+function login(){
+
+
+    if(currentRole === "teacher"){
+
+        let name =
+        document
+        .getElementById("teacherName")
+        .value;
+
+
+        let password =
+        document
+        .getElementById("teacherPassword")
+        .value;
+
+
+        if(name === ""){
+
+            alert("Please enter teacher name!");
+
+            return;
+
+        }
+
+
+        if(password !== "gpjalna123"){
+
+            alert(
+                "Incorrect password!\nDemo password: gpjalna123"
+            );
+
+            return;
+
+        }
+
+
+        document
+        .getElementById("welcomeText")
+        .innerText =
+        "Welcome, " + name + " 👨‍🏫";
+
+
+        document
+        .getElementById("teacherActions")
+        .style.display =
+        "flex";
+
+
+        document
+        .getElementById("roleMessage")
+        .innerText =
+        "Teacher Mode • You can mark attendance";
+
+
+    }
+
+
+    else{
+
+
+        let name =
+        document
+        .getElementById("studentName")
+        .value;
+
+
+        let roll =
+        document
+        .getElementById("studentRoll")
+        .value;
+
+
+        if(name === "" || roll === ""){
+
+            alert(
+                "Please enter name and roll number!"
+            );
+
+            return;
+
+        }
+
+
+        let student =
+        students.find(
+            s => s.roll == roll
+        );
+
+
+        if(!student){
+
+            alert(
+                "Student not found!"
+            );
+
+            return;
+
+        }
+
+
+        document
+        .getElementById("welcomeText")
+        .innerText =
+        "Welcome, " + student.name + " 👨‍🎓";
+
+
+        document
+        .getElementById("teacherActions")
+        .style.display =
+        "none";
+
+
+        document
+        .getElementById("roleMessage")
+        .innerText =
+        "Student Mode • View attendance only";
+
+
+        document
+        .getElementById("studentInfo")
+        .style.display =
+        "block";
+
+
+        document
+        .getElementById("studentInfo")
+        .innerHTML = `
+
+            <div class="student-info">
+
+                <h3>Your Attendance</h3>
+
+                <p>
+                    Roll Number: ${student.roll}
+                </p>
+
+                <div class="big-percent">
+
+                    ${getPercentage(student.roll)}%
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        renderStudents(student.roll);
+
+    }
+
+
+
+    document
+    .getElementById("loginPage")
+    .style.display =
+    "none";
+
+
+    document
+    .getElementById("dashboard")
+    .style.display =
+    "block";
+
+
+    document
+    .getElementById("logoutBtn")
+    .style.display =
+    "block";
+
+
+    if(currentRole === "teacher"){
+
+        renderStudents();
+
+    }
+
+
+    updateStats();
+
+}
+
+
+
+/* ================= LOGOUT ================= */
+
+function logout(){
+
+    location.reload();
+
+}
+
+
+
+/* ================= SUBJECT ================= */
+
+function changeSubject(element,subject){
+
+
+    currentSubject = subject;
+
+
+    document
+    .querySelectorAll(".subject")
+    .forEach(function(item){
+
+        item.classList.remove(
+            "active-subject"
+        );
+
+    });
+
+
+    element.classList.add(
+        "active-subject"
+    );
+
+
+    document
+    .getElementById("subjectTitle")
+    .innerText =
+    subject;
+
+
+    if(currentRole === "teacher"){
+
+        renderStudents();
+
+    }
+
+}
+
+
+
+/* ================= RENDER STUDENTS ================= */
+
+function renderStudents(singleRoll = null){
+
+
+    let table =
+    document.getElementById(
+        "studentTable"
+    );
+
+
+    table.innerHTML = "";
+
+
+    let list =
+    singleRoll
+    ?
+    students.filter(
+        s => s.roll == singleRoll
+    )
+    :
+    students;
+
+
+    list.forEach(function(student){
+
+
+        let status =
+        getStatus(student.roll);
+
+
+        let isPresent =
+        status === "Present";
+
+
+        let row =
+        document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+
+                ${student.roll}
+
+            </td>
+
+
+            <td>
+
+                <div class="student-name">
+
+                    ${student.name}
+
+                </div>
+
+                <div class="roll">
+
+                    CSE 3rd Semester
+
+                </div>
+
+            </td>
+
+
+            <td id="status-${student.roll}">
+
+                ${currentRole === "teacher"
+
+                ?
+
+                `
+
+                <button
+
+                    class="status-btn present
+                    ${isPresent ? 'active-status' : ''}"
+
+                    onclick="setStatus(
+                        ${student.roll},
+                        'Present'
+                    )">
+
+                    Present
+
+                </button>
+
+
+                <button
+
+                    class="status-btn absent
+                    ${status === 'Absent'
+                    ? 'active-status'
+                    : ''}"
+
+                    onclick="setStatus(
+                        ${student.roll},
+                        'Absent'
+                    )">
+
+                    Absent
+
+                </button>
+
+                `
+
+                :
+
+                `
+
+                <b>
+
+                    ${status || "Not Marked"}
+
+                </b>
+
+                `
+
+                }
+
+            </td>
+
+
+            <td>
+
+                <div class="progress">
+
+                    <div
+
+                        class="progress-bar"
+
+                        style="width:
+                        ${getPercentage(student.roll)}%">
+
+                    </div>
+
+                </div>
+
+                <small>
+
+                    ${getPercentage(student.roll)}%
+
+                </small>
+
+            </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+
+/* ================= STATUS ================= */
+
+function getDateKey(){
+
+    let date =
+    document
+    .getElementById("attendanceDate")
+    .value;
+
+
+    return currentSubject + "_" + date;
+
+}
+
+
+
+function getStatus(roll){
+
+
+    let key =
+    getDateKey();
+
+
+    if(
+        attendance[key] &&
+        attendance[key][roll]
+    ){
+
+        return attendance[key][roll];
+
+    }
+
+
+    return "";
+
+}
+
+
+
+function setStatus(roll,status){
+
+
+    let key =
+    getDateKey();
+
+
+    if(!attendance[key]){
+
+        attendance[key] = {};
+
+    }
+
+
+    attendance[key][roll] =
+    status;
+
+
+    renderStudents();
+
+
+    updateStats();
+
+}
+
+
+
+/* ================= ALL PRESENT ================= */
+
+function markAllPresent(){
+
+
+    let key =
+    getDateKey();
+
+
+    attendance[key] = {};
+
+
+    students.forEach(function(student){
+
+        attendance[key][student.roll] =
+        "Present";
+
+    });
+
+
+    renderStudents();
+
+
+    updateStats();
+
+}
+
+
+
+/* ================= ALL ABSENT ================= */
+
+function markAllAbsent(){
+
+
+    let key =
+    getDateKey();
+
+
+    attendance[key] = {};
+
+
+    students.forEach(function(student){
+
+        attendance[key][student.roll] =
+        "Absent";
+
+    });
+
+
+    renderStudents();
+
+
+    updateStats();
+
+}
+
+
+
+/* ================= SAVE ================= */
+
+function saveAttendance(){
+
+
+    localStorage.setItem(
+        "gpAttendance",
+        JSON.stringify(attendance)
+    );
+
+
+    alert(
+        "Attendance saved successfully! ✅"
+    );
+
+}
+
+
+
+/* ================= PERCENTAGE ================= */
+
+function getPercentage(roll){
+
+
+    let total = 0;
+
+    let present = 0;
+
+
+    for(let key in attendance){
+
+
+        if(
+            attendance[key][roll]
+        ){
+
+
+            total++;
+
+
+            if(
+                attendance[key][roll]
+                === "Present"
+            ){
+
+                present++;
+
+            }
+
+        }
+
+    }
+
+
+    if(total === 0){
+
+        return 0;
+
+    }
+
+
+    return Math.round(
+        (present / total) * 100
+    );
+
+}
+
+
+
+/* ================= STATS ================= */
+
+function updateStats(){
+
+
+    let key =
+    getDateKey();
+
+
+    let present = 0;
+
+    let absent = 0;
+
+
+    if(attendance[key]){
+
+
+        Object.values(
+            attendance[key]
+        ).forEach(function(status){
+
+
+            if(status === "Present"){
+
+                present++;
+
+            }
+
+
+            if(status === "Absent"){
+
+                absent++;
+
+            }
+
+        });
+
+    }
+
+
+    document
+    .getElementById("totalStudents")
+    .innerText =
+    students.length;
+
+
+    document
+    .getElementById("presentCount")
+    .innerText =
+    present;
+
+
+    document
+    .getElementById("absentCount")
+    .innerText =
+    absent;
+
+
+    let total =
+    present + absent;
+
+
+    let percent =
+    total === 0
+    ?
+    0
+    :
+    Math.round(
+        (present / total) * 100
+    );
+
+
+    document
+    .getElementById("attendancePercent")
+    .innerText =
+    percent + "%";
+
+}
+
+
+
+/* ================= SEARCH ================= */
+
+function searchStudent(value){
+
+
+    let rows =
+    document
+    .querySelectorAll(
+        "#studentTable tr"
+    );
+
+
+    value =
+    value.toLowerCase();
+
+
+    rows.forEach(function(row){
+
+
+        row.style.display =
+        row.innerText
+        .toLowerCase()
+        .includes(value)
+
+        ?
+
+        ""
+
+        :
+
+        "none";
+
+    });
+
+}
+
+
+
+/* ================= DATE CHANGE ================= */
+
+document
+.getElementById("attendanceDate")
+.addEventListener(
+    "change",
+    function(){
+
+        if(currentRole === "teacher"){
+
+            renderStudents();
+
+            updateStats();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
